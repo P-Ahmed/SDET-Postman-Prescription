@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "f229a587-93f7-4647-8b8c-5fd2d0f4e0d1",
+		"name": "zss_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Token Generation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"testdoc\",\r\n    \"password\":\"Test123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api-token-auth/gen/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api-token-auth",
+						"gen",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Create",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Checking prescription is created or not\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.patient).to.eql(775);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patient\": 775,\r\n    \"additional_notes\": \"\",\r\n    \"prescribed_medicines\": [\r\n        {\r\n            \"medicine\": 1,\r\n            \"dosage_1\": 6,\r\n            \"dosage_2\": 8,\r\n            \"dosage_3\": 5,\r\n            \"duration\": 15,\r\n            \"meal_reliance\": 1\r\n        }\r\n    ],\r\n    \"medical_tests\": [1]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Prescription is available\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData=!null).equals(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patient\": 775,\r\n    \"additional_notes\": \"\",\r\n    \"prescribed_medicines\": [\r\n        {\r\n            \"medicine\": 2,\r\n            \"dosage_1\": 6,\r\n            \"dosage_2\": 8,\r\n            \"dosage_3\": 5,\r\n            \"duration\": 10,\r\n            \"meal_reliance\": 1\r\n        }\r\n    ],\r\n    \"medical_tests\": [1,2,3]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{id}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{id}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Updated Prescription Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Validate updated prescription info\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.patient).to.equal(775)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Prescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{id}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{id}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleted Prescription Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Check prescription is not available\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData==null).equals(false);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "Token",
+			"value": "token"
+		}
+	]
+}
