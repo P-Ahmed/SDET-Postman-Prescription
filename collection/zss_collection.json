@@ -55,7 +55,10 @@
 							"pm.test(\"Checking prescription is created or not\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.patient).to.eql(775);\r",
-							"});"
+							"});\r",
+							"let jsonData =pm.response.json();\r",
+							"let id=jsonData.id;\r",
+							"pm.environment.set(\"id\",id)"
 						],
 						"type": "text/javascript"
 					}
